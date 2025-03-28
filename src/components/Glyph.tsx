@@ -8,15 +8,34 @@ interface GlyphProps {
   brandmarkSvg: string;
   brandKitUrl: string;
   onCopy?: (type: 'logo' | 'brandmark') => void;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export default function Glyph({ logoSvg, brandmarkSvg, brandKitUrl, onCopy }: GlyphProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Glyph({ 
+  logoSvg, 
+  brandmarkSvg, 
+  brandKitUrl, 
+  onCopy,
+  isOpen: controlledIsOpen,
+  onOpenChange 
+}: GlyphProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [copiedItem, setCopiedItem] = useState<'logo' | 'brandmark' | null>(null);
   const previousCopiedItem = useRef<'logo' | 'brandmark' | null>(null);
   const hasPerformedCopy = useRef(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Use controlled or uncontrolled isOpen state
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+  const setIsOpen = (open: boolean) => {
+    if (controlledIsOpen !== undefined) {
+      onOpenChange?.(open);
+    } else {
+      setInternalIsOpen(open);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -89,7 +108,7 @@ export default function Glyph({ logoSvg, brandmarkSvg, brandKitUrl, onCopy }: Gl
               {/* Copy logo as SVG */}
               <button
                 onClick={() => copyToClipboard(logoSvg, 'logo')}
-                className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap relative overflow-hidden group"
+                className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap relative overflow-hidden group rounded-t-[calc(0.5rem-2px)]"
               >
                 <div className="relative h-5 flex-1">
                   <div className={`flex items-center absolute inset-0 ${copiedItem === 'logo' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'logo' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
@@ -169,7 +188,7 @@ export default function Glyph({ logoSvg, brandmarkSvg, brandKitUrl, onCopy }: Gl
               {/* Download BrandKit */}
               <button
                 onClick={downloadBrandKit}
-                className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap group"
+                className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap group rounded-b-[calc(0.5rem-2px)]"
               >
                 <div className="w-6 h-6 flex items-center justify-center mr-2.5">
                   <Image 

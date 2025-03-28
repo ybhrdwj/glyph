@@ -46,7 +46,7 @@ export default function GlyphStatic({ logoSvg, brandmarkSvg, brandKitUrl, onCopy
         {/* Copy logo as SVG */}
         <button
           onClick={() => copyToClipboard(logoSvg, 'logo')}
-          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative overflow-hidden group"
+          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative overflow-hidden group rounded-t-[calc(0.5rem-2px)]"
         >
           <div className="relative h-5 flex-1">
             <div className={`flex items-center absolute inset-0 ${copiedItem === 'logo' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'logo' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
@@ -126,7 +126,7 @@ export default function GlyphStatic({ logoSvg, brandmarkSvg, brandKitUrl, onCopy
         {/* Download BrandKit */}
         <button
           onClick={downloadBrandKit}
-          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap group"
+          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap group rounded-b-[calc(0.5rem-2px)]"
         >
           <div className="w-6 h-6 flex items-center justify-center mr-2.5">
             <Image 
