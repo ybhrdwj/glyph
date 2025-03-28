@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 
 interface GlyphStaticProps {
@@ -12,10 +12,16 @@ interface GlyphStaticProps {
 
 export default function GlyphStatic({ logoSvg, brandmarkSvg, brandKitUrl, onCopy }: GlyphStaticProps) {
   const [copiedItem, setCopiedItem] = useState<'logo' | 'brandmark' | null>(null);
+  const previousCopiedItem = useRef<'logo' | 'brandmark' | null>(null);
+  const hasPerformedCopy = useRef(false);
 
-  const copyToClipboard = async (svg: string, type: 'logo' | 'brandmark') => {
+  const copyToClipboard = async (svgUrl: string, type: 'logo' | 'brandmark') => {
     try {
-      await navigator.clipboard.writeText(svg);
+      const response = await fetch(svgUrl);
+      const svgText = await response.text();
+      await navigator.clipboard.writeText(svgText);
+      previousCopiedItem.current = type;
+      hasPerformedCopy.current = true;
       setCopiedItem(type);
       onCopy?.(type);
       setTimeout(() => setCopiedItem(null), 2000);
@@ -35,66 +41,84 @@ export default function GlyphStatic({ logoSvg, brandmarkSvg, brandKitUrl, onCopy
   };
 
   return (
-    <div className="min-w-fit bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div className="w-[240px] bg-white dark:bg-gray-900 rounded-lg shadow-xl overflow-hidden border border-gray-200/50 dark:border-gray-700/50">
       <div className="p-0.5">
         {/* Copy logo as SVG */}
         <button
           onClick={() => copyToClipboard(logoSvg, 'logo')}
-          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative"
+          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative overflow-hidden group"
         >
-          <div className="w-6 h-6 flex items-center justify-center mr-2.5">
-            <Image 
-              src="/code.svg" 
-              alt="Code icon" 
-              width={18} 
-              height={18}
-            />
-          </div>
-          <span className="text-gray-600 text-sm font-medium min-w-[120px]">
-            {copiedItem === 'logo' ? (
-              <span className="flex items-center gap-1.5 absolute inset-0 px-3 py-2 bg-white dark:bg-gray-900 animate-fade-in-up">
+          <div className="relative h-5 flex-1">
+            <div className={`flex items-center absolute inset-0 ${copiedItem === 'logo' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'logo' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
+              <div className="w-6 h-6 flex items-center justify-center mr-2.5">
                 <Image 
-                  src="/check.svg" 
-                  alt="Check icon" 
+                  src="/code.svg" 
+                  alt="Code icon" 
                   width={18} 
                   height={18}
+                  className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors"
                 />
-                Copied!
+              </div>
+              <span className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 text-sm font-medium transition-colors">
+                Copy logo as SVG
               </span>
-            ) : (
-              'Copy logo as SVG'
+            </div>
+            {copiedItem === 'logo' && (
+              <div className={`flex items-center absolute inset-0 ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
+                <div className="w-6 h-6 flex items-center justify-center mr-2.5">
+                  <Image 
+                    src="/check.svg" 
+                    alt="Check icon" 
+                    width={18} 
+                    height={18}
+                    className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors"
+                  />
+                </div>
+                <span className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 text-sm font-medium transition-colors">
+                  Copied!
+                </span>
+              </div>
             )}
-          </span>
+          </div>
         </button>
 
         {/* Copy brandmark as SVG */}
         <button
           onClick={() => copyToClipboard(brandmarkSvg, 'brandmark')}
-          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative"
+          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative overflow-hidden group"
         >
-          <div className="w-6 h-6 flex items-center justify-center mr-2.5">
-            <Image 
-              src="/hexagon.svg" 
-              alt="Hexagon icon" 
-              width={18} 
-              height={18}
-            />
-          </div>
-          <span className="text-gray-600 text-sm font-medium min-w-[140px]">
-            {copiedItem === 'brandmark' ? (
-              <span className="flex items-center gap-1.5 absolute inset-0 px-3 py-2 bg-white dark:bg-gray-900 animate-fade-in-up">
+          <div className="relative h-5 flex-1">
+            <div className={`flex items-center absolute inset-0 ${copiedItem === 'brandmark' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'brandmark' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
+              <div className="w-6 h-6 flex items-center justify-center mr-2.5">
                 <Image 
-                  src="/check.svg" 
-                  alt="Check icon" 
+                  src="/hexagon.svg" 
+                  alt="Hexagon icon" 
                   width={18} 
                   height={18}
+                  className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors"
                 />
-                Copied!
+              </div>
+              <span className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 text-sm font-medium transition-colors">
+                Copy brandmark as SVG
               </span>
-            ) : (
-              'Copy brandmark as SVG'
+            </div>
+            {copiedItem === 'brandmark' && (
+              <div className={`flex items-center absolute inset-0 ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
+                <div className="w-6 h-6 flex items-center justify-center mr-2.5">
+                  <Image 
+                    src="/check.svg" 
+                    alt="Check icon" 
+                    width={18} 
+                    height={18}
+                    className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors"
+                  />
+                </div>
+                <span className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 text-sm font-medium transition-colors">
+                  Copied!
+                </span>
+              </div>
             )}
-          </span>
+          </div>
         </button>
 
         <div className="h-px bg-gray-200 dark:bg-gray-700 -mx-0.5" />
@@ -102,7 +126,7 @@ export default function GlyphStatic({ logoSvg, brandmarkSvg, brandKitUrl, onCopy
         {/* Download BrandKit */}
         <button
           onClick={downloadBrandKit}
-          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
+          className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap group"
         >
           <div className="w-6 h-6 flex items-center justify-center mr-2.5">
             <Image 
@@ -110,9 +134,10 @@ export default function GlyphStatic({ logoSvg, brandmarkSvg, brandKitUrl, onCopy
               alt="Download icon" 
               width={18} 
               height={18}
+              className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors"
             />
           </div>
-          <span className="text-gray-600 text-sm font-medium">Download BrandKit</span>
+          <span className="text-gray-600 group-hover:text-gray-900 dark:group-hover:text-gray-100 text-sm font-medium transition-colors">Download BrandKit</span>
         </button>
       </div>
     </div>

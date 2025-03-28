@@ -12,19 +12,74 @@ module.exports = {
         mono: ['var(--font-geist-mono)'],
       },
       keyframes: {
-        'fade-in-up': {
+        'slide-up-out': {
           '0%': {
-            opacity: '0',
-            transform: 'translateY(10px)'
+            transform: 'translateY(0)',
+            opacity: '1'
+          },
+          '60%': {
+            transform: 'translateY(-120%)',
+            opacity: '0'
           },
           '100%': {
-            opacity: '1',
-            transform: 'translateY(0)'
+            transform: 'translateY(-100%)',
+            opacity: '0'
+          },
+        },
+        'slide-up-in': {
+          '0%': {
+            transform: 'translateY(100%)',
+            opacity: '0'
+          },
+          '60%': {
+            transform: 'translateY(-20%)',
+            opacity: '1'
+          },
+          '80%': {
+            transform: 'translateY(10%)',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+            opacity: '1'
+          },
+        },
+        'slide-down-in': {
+          '0%': {
+            transform: 'translateY(-100%)',
+            opacity: '0'
+          },
+          '60%': {
+            transform: 'translateY(20%)',
+            opacity: '1'
+          },
+          '80%': {
+            transform: 'translateY(-10%)',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+            opacity: '1'
+          },
+        },
+        'slide-up-out-exit': {
+          '0%': {
+            transform: 'translateY(0)',
+            opacity: '1'
+          },
+          '60%': {
+            transform: 'translateY(-120%)',
+            opacity: '0'
+          },
+          '100%': {
+            transform: 'translateY(-100%)',
+            opacity: '0'
           },
         }
       },
       animation: {
-        'fade-in-up': 'fade-in-up 0.2s ease-out'
+        'slide-up-in': 'slide-up-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+        'slide-up-out': 'slide-up-out 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+        'slide-down-in': 'slide-down-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+        'slide-up-out-exit': 'slide-up-out-exit 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
       }
     },
   },

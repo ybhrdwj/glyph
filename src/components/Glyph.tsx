@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
 interface GlyphProps {
@@ -12,11 +12,44 @@ interface GlyphProps {
 
 export default function Glyph({ logoSvg, brandmarkSvg, brandKitUrl, onCopy }: GlyphProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [copiedItem, setCopiedItem] = useState<'logo' | 'brandmark' | null>(null);
+  const previousCopiedItem = useRef<'logo' | 'brandmark' | null>(null);
+  const hasPerformedCopy = useRef(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  const copyToClipboard = async (svg: string, type: 'logo' | 'brandmark') => {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setPosition({ x: e.clientX, y: e.clientY });
+    setIsOpen(true);
+    // Reset animation state
+    hasPerformedCopy.current = false;
+    previousCopiedItem.current = null;
+  };
+
+  const copyToClipboard = async (svgUrl: string, type: 'logo' | 'brandmark') => {
     try {
-      await navigator.clipboard.writeText(svg);
+      const response = await fetch(svgUrl);
+      const svgText = await response.text();
+      await navigator.clipboard.writeText(svgText);
+      previousCopiedItem.current = type;
+      hasPerformedCopy.current = true;
       setCopiedItem(type);
       onCopy?.(type);
       setTimeout(() => setCopiedItem(null), 2000);
@@ -36,98 +69,123 @@ export default function Glyph({ logoSvg, brandmarkSvg, brandKitUrl, onCopy }: Gl
   };
 
   return (
-    <div className="relative inline-block">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-1.5 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
-      >
-        {/* Button content - can be customized */}
-        <span className="text-sm font-medium">Brand Assets</span>
-      </button>
+    <>
+      <div 
+        className="absolute inset-0" 
+        onContextMenu={handleContextMenu}
+      />
 
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-[240px] bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden z-10 border border-gray-200 dark:border-gray-700">
-          <div className="p-0.5">
-            {/* Copy logo as SVG */}
-            <button
-              onClick={() => copyToClipboard(logoSvg, 'logo')}
-              className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative"
-            >
-              <div className="w-6 h-6 flex items-center justify-center mr-2.5">
-                <Image 
-                  src="/code.svg" 
-                  alt="Code icon" 
-                  width={18} 
-                  height={18}
-                />
-              </div>
-              <span className="text-gray-600 text-sm font-medium min-w-[120px]">
-                {copiedItem === 'logo' ? (
-                  <span className="flex items-center gap-1.5 absolute inset-0 px-3 py-2 bg-white dark:bg-gray-900 animate-fade-in-up">
-                    <Image 
-                      src="/check.svg" 
-                      alt="Check icon" 
-                      width={18} 
-                      height={18}
-                    />
-                    Copied!
-                  </span>
-                ) : (
-                  'Copy logo as SVG'
-                )}
-              </span>
-            </button>
+        <div 
+          ref={menuRef}
+          className="fixed z-50"
+          style={{ 
+            left: `${position.x}px`, 
+            top: `${position.y}px`,
+          }}
+        >
+          <div className="w-[240px] bg-white rounded-lg shadow-xl overflow-hidden z-10 border border-gray-200/50">
+            <div className="p-0.5">
+              {/* Copy logo as SVG */}
+              <button
+                onClick={() => copyToClipboard(logoSvg, 'logo')}
+                className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap relative overflow-hidden group"
+              >
+                <div className="relative h-5 flex-1">
+                  <div className={`flex items-center absolute inset-0 ${copiedItem === 'logo' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'logo' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
+                    <div className="w-6 h-6 flex items-center justify-center mr-2.5">
+                      <Image 
+                        src="/code.svg" 
+                        alt="Code icon" 
+                        width={18} 
+                        height={18}
+                        className="text-gray-600 group-hover:text-gray-900 transition-colors"
+                      />
+                    </div>
+                    <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium transition-colors">
+                      Copy logo as SVG
+                    </span>
+                  </div>
+                  {copiedItem === 'logo' && (
+                    <div className={`flex items-center absolute inset-0 ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
+                      <div className="w-6 h-6 flex items-center justify-center mr-2.5">
+                        <Image 
+                          src="/check.svg" 
+                          alt="Check icon" 
+                          width={18} 
+                          height={18}
+                          className="text-gray-600 group-hover:text-gray-900 transition-colors"
+                        />
+                      </div>
+                      <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium transition-colors">
+                        Copied!
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </button>
 
-            {/* Copy brandmark as SVG */}
-            <button
-              onClick={() => copyToClipboard(brandmarkSvg, 'brandmark')}
-              className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap relative"
-            >
-              <div className="w-6 h-6 flex items-center justify-center mr-2.5">
-                <Image 
-                  src="/hexagon.svg" 
-                  alt="Hexagon icon" 
-                  width={18} 
-                  height={18}
-                />
-              </div>
-              <span className="text-gray-600 text-sm font-medium min-w-[140px]">
-                {copiedItem === 'brandmark' ? (
-                  <span className="flex items-center gap-1.5 absolute inset-0 px-3 py-2 bg-white dark:bg-gray-900 animate-fade-in-up">
-                    <Image 
-                      src="/check.svg" 
-                      alt="Check icon" 
-                      width={18} 
-                      height={18}
-                    />
-                    Copied!
-                  </span>
-                ) : (
-                  'Copy brandmark as SVG'
-                )}
-              </span>
-            </button>
+              {/* Copy brandmark as SVG */}
+              <button
+                onClick={() => copyToClipboard(brandmarkSvg, 'brandmark')}
+                className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap relative overflow-hidden group"
+              >
+                <div className="relative h-5 flex-1">
+                  <div className={`flex items-center absolute inset-0 ${copiedItem === 'brandmark' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'brandmark' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
+                    <div className="w-6 h-6 flex items-center justify-center mr-2.5">
+                      <Image 
+                        src="/hexagon.svg" 
+                        alt="Hexagon icon" 
+                        width={18} 
+                        height={18}
+                        className="text-gray-600 group-hover:text-gray-900 transition-colors"
+                      />
+                    </div>
+                    <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium transition-colors">
+                      Copy brandmark as SVG
+                    </span>
+                  </div>
+                  {copiedItem === 'brandmark' && (
+                    <div className={`flex items-center absolute inset-0 ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
+                      <div className="w-6 h-6 flex items-center justify-center mr-2.5">
+                        <Image 
+                          src="/check.svg" 
+                          alt="Check icon" 
+                          width={18} 
+                          height={18}
+                          className="text-gray-600 group-hover:text-gray-900 transition-colors"
+                        />
+                      </div>
+                      <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium transition-colors">
+                        Copied!
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </button>
 
-            <div className="h-px bg-gray-200 dark:bg-gray-700 -mx-0.5" />
+              <div className="h-px bg-gray-200 -mx-0.5" />
 
-            {/* Download BrandKit */}
-            <button
-              onClick={downloadBrandKit}
-              className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
-            >
-              <div className="w-6 h-6 flex items-center justify-center mr-2.5">
-                <Image 
-                  src="/download.svg" 
-                  alt="Download icon" 
-                  width={18} 
-                  height={18}
-                />
-              </div>
-              <span className="text-gray-600 text-sm font-medium">Download BrandKit</span>
-            </button>
+              {/* Download BrandKit */}
+              <button
+                onClick={downloadBrandKit}
+                className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap group"
+              >
+                <div className="w-6 h-6 flex items-center justify-center mr-2.5">
+                  <Image 
+                    src="/download.svg" 
+                    alt="Download icon" 
+                    width={18} 
+                    height={18}
+                    className="text-gray-600 group-hover:text-gray-900 transition-colors"
+                  />
+                </div>
+                <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium transition-colors">Download BrandKit</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 } 
