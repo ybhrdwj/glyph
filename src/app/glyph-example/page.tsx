@@ -23,11 +23,6 @@ export default function GlyphExample() {
   // A fake URL for the brand kit download
   const brandKitUrl = '/example-brand-kit.zip';
 
-  const handleCopy = (type: 'logo' | 'brandmark') => {
-    setLastCopied(type);
-    setTimeout(() => setLastCopied(null), 2000);
-  };
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl w-full">
@@ -45,7 +40,7 @@ export default function GlyphExample() {
                 logoSvg={logoSvg}
                 brandmarkSvg={brandmarkSvg}
                 brandKitUrl={brandKitUrl}
-                onCopy={handleCopy}
+                onCopy={setLastCopied}
               />
             </div>
           </div>
@@ -60,16 +55,10 @@ export default function GlyphExample() {
               logoSvg={logoSvg}
               brandmarkSvg={brandmarkSvg}
               brandKitUrl={brandKitUrl}
-              onCopy={handleCopy}
+              onCopy={setLastCopied}
             />
           </div>
         </div>
-        
-        {lastCopied && (
-          <div className="bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300 p-3 rounded-lg text-sm mb-8">
-            Successfully copied {lastCopied === 'logo' ? 'logo' : 'brandmark'} to clipboard!
-          </div>
-        )}
         
         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold mb-3">How to use</h2>
