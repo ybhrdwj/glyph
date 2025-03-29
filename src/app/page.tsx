@@ -398,7 +398,9 @@ export default function GlyphExample() {
               </div>
             </div>
             <a 
-              href="https://github.com/yourusername/glyph" 
+              href="https://github.com/ybhrdwj/glyph" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full sm:w-auto px-4 py-2 bg-white border border-gray-200 text-gray-900 rounded-md hover:bg-gray-50 flex items-center justify-center sm:justify-start gap-2"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
