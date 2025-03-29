@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Glyph
+
+A modern web application built with Next.js, TypeScript, and Tailwind CSS.
+
+## Tech Stack
+
+- **Framework**: Next.js 14
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Font**: Geist
+- **Code Highlighting**: Shiki
+- **Development Tools**: ESLint, PostCSS, Autoprefixer
+
+## Prerequisites
+
+- Node.js (version specified in package.json)
+- npm or yarn package manager
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+```bash
+git clone [your-repository-url]
+cd glyph
+```
 
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Glyph is a brand asset management component that allows you to:
+- Display and manage logo and brandmark assets
+- Copy SVG code for both logo and brandmark
+- Access brand kit resources
+- Customize the appearance and behavior of the component
 
-## Learn More
+### Component Props
 
-To learn more about Next.js, take a look at the following resources:
+```typescript
+interface GlyphProps {
+  logoSvg: string;          // SVG code for the logo
+  brandmarkSvg: string;     // SVG code for the brandmark
+  brandKitUrl: string;      // URL to the brand kit
+  onCopy?: (type: 'logo' | 'brandmark') => void;  // Callback when copying assets
+  isOpen?: boolean;         // Control the open state of the component
+  onOpenChange?: (open: boolean) => void;  // Callback when open state changes
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Example Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```tsx
+import Glyph from './components/Glyph';
 
-## Deploy on Vercel
+function App() {
+  return (
+    <Glyph
+      logoSvg="<svg>...</svg>"
+      brandmarkSvg="<svg>...</svg>"
+      brandKitUrl="https://example.com/brand-kit"
+      onCopy={(type) => console.log(`Copied ${type}`)}
+    />
+  );
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Available Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application for production
+- `npm run start` - Start the production server
+- `npm run lint` - Run ESLint to check code quality
+
+## Project Structure
+
+```
+glyph/
+├── src/              # Source code
+├── public/           # Static assets
+├── .next/           # Next.js build output
+└── node_modules/    # Dependencies
+```
+
+## Development
+
+The project uses:
+- TypeScript for type safety
+- Tailwind CSS for styling
+- ESLint for code linting
+- Shiki for code syntax highlighting
+- Geist font for typography
+
+## License
+
+[Your chosen license]
+
+## Contributing
+
+[Your contribution guidelines]
