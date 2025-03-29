@@ -12,6 +12,6 @@ export async function highlightCode(code: string, language: string) {
   });
 
   return highlighted
-    .replace('<pre class="', '<pre class="p-4 sm:p-6 whitespace-pre-wrap break-words ')
-    .replace('<code>', '<code class="whitespace-pre-wrap">');
+    .replace('<pre class="', '<pre class="!p-4 !sm:p-6 !whitespace-pre-wrap !break-words shiki-pre ')
+    .replace('<code>', '<code class="!whitespace-pre-wrap shiki-code">');
 } 

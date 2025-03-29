@@ -45,7 +45,7 @@ const CodeBlock = React.memo(function CodeBlock({ code, highlightedHtml }: CodeB
         </div>
       </button>
       <div 
-        className="relative rounded-lg overflow-hidden"
+        className="relative rounded-lg overflow-hidden [&_.shiki-pre]:!p-4 [&_.shiki-pre]:!sm:p-6 [&_.shiki-pre]:!whitespace-pre-wrap [&_.shiki-pre]:!break-words"
         dangerouslySetInnerHTML={{ __html: highlightedHtml }}
       />
     </div>

@@ -5,6 +5,12 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'p-4',
+    'sm:p-6',
+    'whitespace-pre-wrap',
+    'break-words',
+  ],
   theme: {
     extend: {
       fontFamily: {
