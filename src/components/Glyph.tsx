@@ -111,7 +111,7 @@ export default function Glyph({
                 className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap relative overflow-hidden group rounded-t-[calc(0.5rem-2px)]"
               >
                 <div className="relative h-5 flex-1">
-                  <div className={`flex items-center absolute inset-0 ${copiedItem === 'logo' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'logo' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
+                  <div className={`flex items-center absolute inset-0 transform-gpu will-change-transform ${copiedItem === 'logo' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'logo' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
                     <div className="w-6 h-6 flex items-center justify-center mr-2.5">
                       <Image 
                         src="/code.svg" 
@@ -126,7 +126,7 @@ export default function Glyph({
                     </span>
                   </div>
                   {copiedItem === 'logo' && (
-                    <div className={`flex items-center absolute inset-0 ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
+                    <div className={`flex items-center absolute inset-0 transform-gpu will-change-transform ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
                       <div className="w-6 h-6 flex items-center justify-center mr-2.5">
                         <Image 
                           src="/check.svg" 
@@ -150,7 +150,7 @@ export default function Glyph({
                 className="flex items-center w-full px-3 py-2 text-left hover:bg-gray-100 transition-colors whitespace-nowrap relative overflow-hidden group"
               >
                 <div className="relative h-5 flex-1">
-                  <div className={`flex items-center absolute inset-0 ${copiedItem === 'brandmark' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'brandmark' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
+                  <div className={`flex items-center absolute inset-0 transform-gpu will-change-transform ${copiedItem === 'brandmark' ? 'animate-slide-up-out' : copiedItem === null && previousCopiedItem.current === 'brandmark' && hasPerformedCopy.current ? 'animate-slide-down-in' : ''}`}>
                     <div className="w-6 h-6 flex items-center justify-center mr-2.5">
                       <Image 
                         src="/hexagon.svg" 
@@ -165,7 +165,7 @@ export default function Glyph({
                     </span>
                   </div>
                   {copiedItem === 'brandmark' && (
-                    <div className={`flex items-center absolute inset-0 ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
+                    <div className={`flex items-center absolute inset-0 transform-gpu will-change-transform ${copiedItem === null ? 'animate-slide-up-out-exit' : 'animate-slide-up-in'}`}>
                       <div className="w-6 h-6 flex items-center justify-center mr-2.5">
                         <Image 
                           src="/check.svg" 

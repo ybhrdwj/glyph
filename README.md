@@ -106,8 +106,15 @@ The project uses:
 
 ## License
 
-[Your chosen license]
+This project is licensed under the MIT License - feel free to use, modify, and distribute this code for any purpose, commercial or non-commercial, without any restrictions.
 
 ## Contributing
 
-[Your contribution guidelines]
+Contributions are welcome! Feel free to:
+
+1. Fork the repository
+2. Create a new branch for your feature/fix
+3. Make your changes
+4. Submit a pull request
+
+Please ensure your code follows the existing style and includes appropriate tests if applicable.

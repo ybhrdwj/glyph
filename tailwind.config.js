@@ -76,10 +76,10 @@ module.exports = {
         }
       },
       animation: {
-        'slide-up-in': 'slide-up-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-        'slide-up-out': 'slide-up-out 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-        'slide-down-in': 'slide-down-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-        'slide-up-out-exit': 'slide-up-out-exit 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
+        'slide-up-in': 'slide-up-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+        'slide-up-out': 'slide-up-out 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+        'slide-down-in': 'slide-down-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+        'slide-up-out-exit': 'slide-up-out-exit 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards'
       }
     },
   },
